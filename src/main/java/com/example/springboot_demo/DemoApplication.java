@@ -2,12 +2,14 @@ package com.example.springboot_demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-public class SpringbootDemoApplication {
+@RestController
+public class DemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootDemoApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 	}
 
 }
