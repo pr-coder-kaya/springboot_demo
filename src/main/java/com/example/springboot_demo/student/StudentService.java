@@ -20,4 +20,10 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public void addNewStudent(Student student) {
+        if (studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
+            throw new IllegalStateException("Email is already taken");
+        }
+        studentRepository.save(student);
+    }
 }
