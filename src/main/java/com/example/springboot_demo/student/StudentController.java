@@ -23,7 +23,7 @@ public class StudentController {
         return studentService.getStudent(id);
     }
 
-    @GetMapping(path = "/get-students")
+    @GetMapping(path = "/getAll")
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
     }
@@ -38,7 +38,7 @@ public class StudentController {
         studentService.deleteStudent(id);
     }
 
-    @DeleteMapping(path = "/delete-students")
+    @DeleteMapping(path = "/deleteAll")
     public void deleteAllStudents(){
         studentService.deleteAllStudents();
     }
