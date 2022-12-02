@@ -19,12 +19,16 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    public Optional<Student> getStudent(long id){
+        if(studentRepository.existsById(id)) return studentRepository.findStudentById(id);
+        else throw new IllegalStateException("Student with id " + id + " does not exists");
+    }
 
-    public List<Student> getStudents() {
+    public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
-    public void addNewStudent(Student student) {
+    public void createStudent(Student student) {
         if (studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
             throw new IllegalStateException("Email is already taken");
         }
