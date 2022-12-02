@@ -60,4 +60,14 @@ public class StudentService {
 
         if(dateOfBirth != null && !Objects.equals(student.getDateOfBirth(), dateOfBirth)) student.setDateOfBirth(dateOfBirth);
     }
+
+    @Transactional
+    public Student updateStudent(Student student, long id){
+        Student s = studentRepository.findById(id).orElseThrow(() -> new IllegalStateException("Student with id " + id + " does not exists"));
+        s.setFirstName(student.getFirstName());
+        s.setLastName(student.getLastName());
+        s.setEmail(student.getEmail());
+        s.setDateOfBirth(student.getDateOfBirth());
+        return s;
+    }
 }
