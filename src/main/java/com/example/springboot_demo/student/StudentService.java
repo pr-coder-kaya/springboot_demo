@@ -40,6 +40,10 @@ public class StudentService {
         else throw new IllegalStateException("Student with id " + id + " does not exists");
     }
 
+    public void deleteAllStudents(){
+        studentRepository.deleteAll();
+    }
+
     @Transactional
     public void updateStudent(long id, String firstName, String lastName, String email, LocalDate dateOfBirth){
         Student student = studentRepository.findById(id).orElseThrow(() -> new IllegalStateException("Student with id " + id + " does not exists"));
