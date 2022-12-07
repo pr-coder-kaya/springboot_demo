@@ -27,15 +27,19 @@ public class FieldValidator {
 
     public static boolean isDateOfBirthValid(String date) {
         try{
-            LocalDate localDate = LocalDate.now(ZoneId.systemDefault());
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            if(LocalDate.parse(date, dateTimeFormatter).isAfter(localDate)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be a future date.");
+            if(isDateFuture(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be a future date.");
         }
         catch (DateTimeParseException e){
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date or date format. The date should be valid and the expected date format is yyyy-MM-dd");
         }
         return true;
+    }
+
+    public static boolean isDateFuture(String date){
+        LocalDate localDate = LocalDate.now(ZoneId.systemDefault());
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        return LocalDate.parse(date, dateTimeFormatter).isAfter(localDate);
     }
 }
