@@ -1,7 +1,9 @@
 package com.example.springboot_demo.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,7 +46,7 @@ public class StudentController {
     public String deleteAllStudents(){
         studentService.deleteAllStudents();
         if(studentService.getAllStudents().size() == 0) return "All students are deleted.";
-        throw new IllegalStateException("An issue occurred when deleting all student.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "An issue occurred when deleting all student.");
     }
 
     @PatchMapping(path = "update/{studentId}")
