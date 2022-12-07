@@ -2,8 +2,10 @@ package com.example.springboot_demo.student;
 
 import com.example.springboot_demo.utils.FieldValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +22,7 @@ public class StudentService {
 
     public Optional<Student> getStudent(long id){
         if(studentRepository.existsById(id)) return studentRepository.findStudentById(id);
-        else throw new IllegalStateException("Student with id " + id + " does not exists");
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists");
     }
 
     public List<Student> getAllStudents() {
@@ -34,7 +36,7 @@ public class StudentService {
                 FieldValidator.isEmailValid(student.getEmail())
         ){
             if (studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
-                throw new IllegalStateException("Email is already taken");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
             }
             studentRepository.save(student);
         }
@@ -42,7 +44,7 @@ public class StudentService {
 
     public void deleteStudent(long id) {
         if(studentRepository.existsById(id)) studentRepository.deleteById(id);
-        else throw new IllegalStateException("Student with id " + id + " does not exists");
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists");
     }
 
     public void deleteAllStudents(){
@@ -51,7 +53,7 @@ public class StudentService {
 
     @Transactional
     public void updateStudent(long id, String firstName, String lastName, String email, String dateOfBirth){
-        Student student = studentRepository.findById(id).orElseThrow(() -> new IllegalStateException("Student with id " + id + " does not exists"));
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
 
         if(firstName != null && !firstName.trim().isEmpty() && !student.getFirstName().equals(firstName)) student.setFirstName(firstName);
 
@@ -59,7 +61,7 @@ public class StudentService {
 
         if(email != null && !email.trim().isEmpty() && !student.getEmail().equals(email)) {
             Optional<Student> studentOptional = studentRepository.findStudentByEmail(email);
-            if(studentOptional.isPresent()) throw new IllegalStateException("Email is already taken");
+            if(studentOptional.isPresent())  throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
             student.setEmail(email);
         }
 
@@ -68,7 +70,7 @@ public class StudentService {
 
     @Transactional
     public Student updateStudent(Student student, long id){
-        Student s = studentRepository.findById(id).orElseThrow(() -> new IllegalStateException("Student with id " + id + " does not exists"));
+        Student s = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
         s.setFirstName(student.getFirstName());
         s.setLastName(student.getLastName());
         s.setEmail(student.getEmail());
