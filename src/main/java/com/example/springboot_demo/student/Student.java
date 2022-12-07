@@ -1,7 +1,6 @@
 package com.example.springboot_demo.student;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Table
