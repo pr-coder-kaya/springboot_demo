@@ -25,7 +25,7 @@ public class FieldValidator {
         return true;
     }
 
-    public static boolean isDOBValid(String date) {
+    public static boolean isDateOfBirthValid(String date) {
         try{
             LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd").withResolverStyle(ResolverStyle.STRICT));
         }

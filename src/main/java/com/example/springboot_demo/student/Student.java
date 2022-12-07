@@ -21,20 +21,20 @@ public class Student {
     private String firstName;
     private String lastName;
     private String email;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     public Student(){
 
     }
 
-    public Student(String firstName, String lastName, String email, LocalDate dateOfBirth) {
+    public Student(String firstName, String lastName, String email, String dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Student(long id, String firstName, String lastName, String email, LocalDate dateOfBirth) {
+    public Student(long id, String firstName, String lastName, String email, String dateOfBirth) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -74,11 +74,11 @@ public class Student {
         this.email = email;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

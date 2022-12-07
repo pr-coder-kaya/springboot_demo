@@ -19,14 +19,14 @@ public class StudentConfig {
                     "John",
                     "Doe",
                     "johndoe@gmail.com",
-                    LocalDate.of(2022, Month.NOVEMBER, 22)
+                    "2022-11-22"
             );
 
             Student s2 = new Student(
                     "Alex",
                     "Smith",
                     "alexsmith@gmail.com",
-                    LocalDate.of(2021, Month.NOVEMBER, 22)
+                    "2000-07-15"
             );
 
             studentRepository.saveAll(new ArrayList<>(Arrays.asList(s1, s2)));

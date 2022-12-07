@@ -1,5 +1,6 @@
 package com.example.springboot_demo.student;
 
+import com.example.springboot_demo.utils.FieldValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +30,16 @@ public class StudentService {
     }
 
     public void createStudent(Student student) {
-        if (studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
-            throw new IllegalStateException("Email is already taken");
+        if(FieldValidator.isNameValid(student.getFirstName()) &&
+                FieldValidator.isNameValid(student.getLastName()) &&
+                FieldValidator.isDateOfBirthValid(student.getDateOfBirth()) &&
+                FieldValidator.isEmailValid(student.getEmail())
+        ){
+            if (studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
+                throw new IllegalStateException("Email is already taken");
+            }
+            studentRepository.save(student);
         }
-        studentRepository.save(student);
     }
 
     public void deleteStudent(long id) {
@@ -45,7 +52,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(long id, String firstName, String lastName, String email, LocalDate dateOfBirth){
+    public void updateStudent(long id, String firstName, String lastName, String email, String dateOfBirth){
         Student student = studentRepository.findById(id).orElseThrow(() -> new IllegalStateException("Student with id " + id + " does not exists"));
 
         if(firstName != null && !firstName.trim().isEmpty() && !student.getFirstName().equals(firstName)) student.setFirstName(firstName);
@@ -58,7 +65,7 @@ public class StudentService {
             student.setEmail(email);
         }
 
-        if(dateOfBirth != null && !Objects.equals(student.getDateOfBirth(), dateOfBirth)) student.setDateOfBirth(dateOfBirth);
+        if(dateOfBirth != null && !student.getDateOfBirth().equals(dateOfBirth)) student.setDateOfBirth(dateOfBirth);
     }
 
     @Transactional

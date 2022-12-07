@@ -52,7 +52,7 @@ public class StudentController {
                                            @RequestParam(required = false) String firstName,
                                            @RequestParam(required = false) String lastName,
                                            @RequestParam(required = false) String email,
-                                           @RequestParam(required = false)LocalDate dateOfBirth){
+                                           @RequestParam(required = false) String dateOfBirth){
         studentService.updateStudent(id, firstName, lastName, email, dateOfBirth);
         return studentService.getStudent(id);
     }
