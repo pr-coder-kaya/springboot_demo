@@ -27,11 +27,14 @@ public class FieldValidator {
 
     public static boolean isDateOfBirthValid(String date) {
         try{
-            if(isDateFuture(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be a future date.");
+            if(date == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid/missing field");
+            else if(date.trim().isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Field value cannot be empty");
+            else if(isDateFuture(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be a future date.");
+            else if(isDate100YearsOrPast(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be older than 100 years.");
         }
         catch (DateTimeParseException e){
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date or date format. The date should be valid and the expected date format is yyyy-MM-dd");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format. The expected date format is yyyy-MM-dd");
         }
         return true;
     }
@@ -41,5 +44,11 @@ public class FieldValidator {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         return LocalDate.parse(date, dateTimeFormatter).isAfter(localDate);
+    }
+
+    public static boolean isDate100YearsOrPast(String date){
+        LocalDate localDate = LocalDate.now(ZoneId.systemDefault());
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date, dateTimeFormatter).plusYears(100).getYear() < localDate.getYear();
     }
 }
