@@ -16,12 +16,12 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository){
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
-    public Optional<Student> getStudent(long id){
-        if(studentRepository.existsById(id)) return studentRepository.findStudentById(id);
+    public Optional<Student> getStudent(long id) {
+        if (studentRepository.existsById(id)) return studentRepository.findStudentById(id);
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists");
     }
 
@@ -30,11 +30,11 @@ public class StudentService {
     }
 
     public void createStudent(Student student) {
-        if(FieldValidator.isNameValid(student.getFirstName()) &&
+        if (FieldValidator.isNameValid(student.getFirstName()) &&
                 FieldValidator.isNameValid(student.getLastName()) &&
                 FieldValidator.isDateOfBirthValid(student.getDateOfBirth()) &&
                 FieldValidator.isEmailValid(student.getEmail())
-        ){
+        ) {
             if (studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
             }
@@ -43,33 +43,36 @@ public class StudentService {
     }
 
     public void deleteStudent(long id) {
-        if(studentRepository.existsById(id)) studentRepository.deleteById(id);
+        if (studentRepository.existsById(id)) studentRepository.deleteById(id);
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists");
     }
 
-    public void deleteAllStudents(){
+    public void deleteAllStudents() {
         studentRepository.deleteAll();
     }
 
     @Transactional
-    public void updateStudent(long id, String firstName, String lastName, String email, String dateOfBirth){
+    public void updateStudent(long id, String firstName, String lastName, String email, String dateOfBirth) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
 
-        if(firstName != null && !firstName.trim().isEmpty() && !student.getFirstName().equals(firstName)) student.setFirstName(firstName);
+        if (firstName != null && !firstName.trim().isEmpty() && !student.getFirstName().equals(firstName))
+            student.setFirstName(firstName);
 
-        if(lastName != null && !lastName.trim().isEmpty() && !student.getLastName().equals(lastName)) student.setLastName(lastName);
+        if (lastName != null && !lastName.trim().isEmpty() && !student.getLastName().equals(lastName))
+            student.setLastName(lastName);
 
-        if(email != null && !email.trim().isEmpty() && !student.getEmail().equals(email)) {
+        if (email != null && !email.trim().isEmpty() && !student.getEmail().equals(email)) {
             Optional<Student> studentOptional = studentRepository.findStudentByEmail(email);
-            if(studentOptional.isPresent())  throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
+            if (studentOptional.isPresent())
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
             student.setEmail(email);
         }
 
-        if(dateOfBirth != null && !student.getDateOfBirth().equals(dateOfBirth)) student.setDateOfBirth(dateOfBirth);
+        if (dateOfBirth != null && !student.getDateOfBirth().equals(dateOfBirth)) student.setDateOfBirth(dateOfBirth);
     }
 
     @Transactional
-    public Student updateStudent(Student student, long id){
+    public Student updateStudent(Student student, long id) {
         Student s = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
         s.setFirstName(student.getFirstName());
         s.setLastName(student.getLastName());
