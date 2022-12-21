@@ -36,16 +36,13 @@ public class StudentController {
     }
 
     @DeleteMapping(path = "{studentId}")
-    public String deleteStudent(@PathVariable("studentId") long id) {
+    public void deleteStudent(@PathVariable("studentId") long id) {
         studentService.deleteStudent(id);
-        return "Student with id " + id + " is deleted.";
     }
 
     @DeleteMapping(path = "deleteAll")
-    public String deleteAllStudents() {
+    public void deleteAllStudents() {
         studentService.deleteAllStudents();
-        if (studentService.getAllStudents().size() == 0) return "All students are deleted.";
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "An issue occurred when deleting all student.");
     }
 
     @PatchMapping(path = "{studentId}")
