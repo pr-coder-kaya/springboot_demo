@@ -30,11 +30,7 @@ public class StudentService {
     }
 
     public void createStudent(Student student) {
-        if (FieldValidator.isNameValid(student.getFirstName()) &&
-                FieldValidator.isNameValid(student.getLastName()) &&
-                FieldValidator.isDateOfBirthValid(student.getDateOfBirth()) &&
-                FieldValidator.isEmailValid(student.getEmail())
-        ) {
+        if (FieldValidator.allStudentFieldsValid(student)) {
             if (studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
             }
@@ -52,32 +48,36 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(long id, String firstName, String lastName, String email, String dateOfBirth) {
-        Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
+    public void updateStudentPatch(Student student, long id) {
+        Student existingStudent = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
 
-        if (firstName != null && !firstName.trim().isEmpty() && !student.getFirstName().equals(firstName))
-            student.setFirstName(firstName);
-
-        if (lastName != null && !lastName.trim().isEmpty() && !student.getLastName().equals(lastName))
-            student.setLastName(lastName);
-
-        if (email != null && !email.trim().isEmpty() && !student.getEmail().equals(email)) {
-            Optional<Student> studentOptional = studentRepository.findStudentByEmail(email);
-            if (studentOptional.isPresent())
+        if(student.getEmail() != null && FieldValidator.isEmailValid(student.getEmail())){
+            if (!student.getEmail().equals(existingStudent.getEmail()) && studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
-            student.setEmail(email);
+            }
+            else{
+                existingStudent.setEmail(student.getEmail());
+            }
         }
 
-        if (dateOfBirth != null && !student.getDateOfBirth().equals(dateOfBirth)) student.setDateOfBirth(dateOfBirth);
+        if(student.getFirstName() != null && FieldValidator.isNameValid(student.getFirstName())) existingStudent.setFirstName(student.getFirstName());
+        if(student.getLastName() != null && FieldValidator.isNameValid(student.getLastName())) existingStudent.setLastName(student.getLastName());
+        if(student.getDateOfBirth() != null && FieldValidator.isDateOfBirthValid(student.getDateOfBirth())) existingStudent.setDateOfBirth(student.getDateOfBirth());
     }
 
     @Transactional
-    public Student updateStudent(Student student, long id) {
-        Student s = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
-        s.setFirstName(student.getFirstName());
-        s.setLastName(student.getLastName());
-        s.setEmail(student.getEmail());
-        s.setDateOfBirth(student.getDateOfBirth());
-        return s;
+    public Student updateStudentPut(Student student, long id) {
+        Student existingStudent = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " does not exists"));
+
+        if (FieldValidator.allStudentFieldsValid(student)) {
+            if (!student.getEmail().equals(existingStudent.getEmail()) && studentRepository.findStudentByEmail(student.getEmail()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, the email you have entered is already in use");
+            }
+            existingStudent.setFirstName(student.getFirstName());
+            existingStudent.setLastName(student.getLastName());
+            existingStudent.setEmail(student.getEmail());
+            existingStudent.setDateOfBirth(student.getDateOfBirth());
+        }
+        return existingStudent;
     }
 }

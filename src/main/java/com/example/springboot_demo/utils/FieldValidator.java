@@ -1,5 +1,6 @@
 package com.example.springboot_demo.utils;
 
+import com.example.springboot_demo.student.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -9,6 +10,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class FieldValidator {
+
+    public static boolean allStudentFieldsValid(Student student){
+        return  FieldValidator.isNameValid(student.getFirstName()) &&
+                FieldValidator.isNameValid(student.getLastName()) &&
+                FieldValidator.isDateOfBirthValid(student.getDateOfBirth()) &&
+                FieldValidator.isEmailValid(student.getEmail());
+    }
     public static boolean isNameValid(String name) {
         if (name == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid/missing field");
         else if (name.trim().isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Field value cannot be empty");

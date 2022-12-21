@@ -49,18 +49,14 @@ public class StudentController {
     }
 
     @PatchMapping(path = "{studentId}")
-    public Optional<Student> updateStudent(@PathVariable("studentId") long id,
-                                           @RequestParam(required = false) String firstName,
-                                           @RequestParam(required = false) String lastName,
-                                           @RequestParam(required = false) String email,
-                                           @RequestParam(required = false) String dateOfBirth) {
-        studentService.updateStudent(id, firstName, lastName, email, dateOfBirth);
+    public Optional<Student> updateStudentPatch(@RequestBody Student student, @PathVariable("studentId") long id) {
+        studentService.updateStudentPatch(student, id);
         return studentService.getStudent(id);
     }
 
     @PutMapping(path = "{studentId}")
-    public Optional<Student> updateStudent(@RequestBody Student student, @PathVariable("studentId") long id) {
-        studentService.updateStudent(student, id);
+    public Optional<Student> updateStudentPut(@RequestBody Student student, @PathVariable("studentId") long id) {
+        studentService.updateStudentPut(student, id);
         return studentService.getStudent(id);
     }
 }
