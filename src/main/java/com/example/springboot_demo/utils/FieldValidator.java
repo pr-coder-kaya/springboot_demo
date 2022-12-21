@@ -29,7 +29,7 @@ public class FieldValidator {
         else if (email.trim().isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Field value cannot be empty");
         else if (!email.matches("[\\w.-]{2,}@[\\w.-]{2,}\\.[\\w.-]{2,}"))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email format. The expected format is <2+chars>@<2+chars>.<2+chars> and only digits, letters, and @.-_ characters are allowed.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email format. The expected format is <2+chars>@<2+chars>.<2+chars> and only digits, letters, and @.-_ characters are allowed");
         return true;
     }
 
@@ -37,8 +37,8 @@ public class FieldValidator {
         try{
             if(date == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid/missing field");
             else if(date.trim().isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Field value cannot be empty");
-            else if(isDateFuture(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be a future date.");
-            else if(isDate100YearsOrPast(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be older than 100 years.");
+            else if(isDateFuture(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be a future date");
+            else if(isDate100YearsOrPast(date)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date. The date of birth cannot be older than 100 years");
         }
         catch (DateTimeParseException e){
             e.printStackTrace();
